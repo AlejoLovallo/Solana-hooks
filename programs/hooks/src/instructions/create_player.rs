@@ -1,8 +1,9 @@
 use anchor_lang::prelude::*;
 
 use crate::{
+    constants::*,
     errors::PlayerErrors,
-    states::{IPlayer, PlayerData},
+    states::{IPlayer, PlayerData, ProgramAdmin},
 };
 
 impl IPlayer for PlayerData {
@@ -15,47 +16,59 @@ impl IPlayer for PlayerData {
     }
 }
 
-use anchor_lang::prelude::*;
-
-use crate::{constants::*, states::*};
-
 #[derive(Accounts)]
-pub struct CreateGlobalState<'info> {
-    //Payer account (owner of the program)
+pub struct CreatePlayer<'info> {
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub user: Signer<'info>,
 
-    //The [StakeMaster] to be created.
+    #[account(
+      seeds = [
+        PROGRAM_ADMIN_TAG.as_ref(),
+      ],
+      bump
+    )]
+    pub program_admin: Box<Account<'info, ProgramAdmin>>,
+
     #[account(
         init,
         seeds = [
-            PROGRAM_ADMIN_TAG.as_ref(),
+            PLAYER_DATA_TAG.as_ref(),
+            user.key().as_ref(),
         ],
         bump,
-        payer = owner,
-        space = ProgramAdmin::LEN
+        payer = user,
+        space = PlayerData::LEN
     )]
-    pub program_admin: Account<'info, ProgramAdmin>,
+    pub player: Account<'info, PlayerData>,
 
     pub system_program: Program<'info, System>,
     pub rent: Sysvar<'info, Rent>,
 }
 
-impl<'info> CreateGlobalState<'info> {
-    pub fn create_global_state(&mut self) -> Result<()> {
-        let program_admin = &mut self.program_admin;
-        program_admin.authority = self.owner.key();
+impl<'info> CreatePlayer<'info> {
+    pub fn create_player(&mut self) -> Result<()> {
+        let player = &mut self.player;
 
-        emit!(CreateGlobalStateEvent {
-            program_admin: program_admin.key(),
+        player.owner = self.user.key();
+        player.banned = false;
+        player.active = true;
+
+        // Nahive approach where you check if is banned
+        player.check_is_not_banned();
+
+        emit!(CreatePlayerEvent {
+            player: player.key(),
+            owner: player.owner
         });
+
         Ok(())
     }
 }
 
 #[event]
-pub struct CreateGlobalStateEvent {
-    /// The [Stake Master] being created.
+pub struct CreatePlayerEvent {
     #[index]
-    pub program_admin: Pubkey,
+    pub player: Pubkey,
+
+    pub owner: Pubkey,
 }

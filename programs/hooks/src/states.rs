@@ -21,7 +21,7 @@ pub trait IPlayer {
 #[derive(Default)]
 pub struct PlayerData {
     /// Owner of this PlayerData account
-    pub player: Pubkey,
+    pub owner: Pubkey,
     /// Is banned?
     pub banned: bool,
     /// Activated

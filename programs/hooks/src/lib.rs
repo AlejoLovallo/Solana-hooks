@@ -20,7 +20,7 @@ pub mod hooks {
         ctx.accounts.create_global_state()
     }
 
-    pub fn create_player(ctx: Context<CreatePlayer>, banned: u8) -> Result<()> {
+    pub fn create_player(ctx: Context<CreatePlayer>) -> Result<()> {
         ctx.accounts.create_player()
     }
 

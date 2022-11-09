@@ -4,15 +4,16 @@ use crate::{
     constants::*,
     errors::PlayerErrors,
     states::{IPlayer, PlayerData, ProgramAdmin},
+    utils::*,
 };
 
 impl IPlayer for PlayerData {
-    fn check_is_not_banned(&mut self) -> Result<&mut Self> {
+    fn on_creation(&mut self) -> Result<()> {
         if self.banned {
             return err!(PlayerErrors::RandomError);
         }
 
-        Ok(self)
+        Ok(())
     }
 }
 
@@ -54,7 +55,13 @@ impl<'info> CreatePlayer<'info> {
         player.active = true;
 
         // Nahive approach where you check if is banned
-        player.check_is_not_banned();
+        let mut player_data = PlayerData {
+            owner: player.owner,
+            banned: player.banned,
+            active: player.active,
+        };
+
+        on_create_player(&mut player_data);
 
         emit!(CreatePlayerEvent {
             player: player.key(),

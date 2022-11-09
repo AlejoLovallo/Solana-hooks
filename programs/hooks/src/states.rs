@@ -10,11 +10,11 @@ pub struct ProgramAdmin {
 }
 
 impl ProgramAdmin {
-    pub const LEN: usize = (DISCRIMINATOR_LENGTH + 32 ) * 2;
+    pub const LEN: usize = (DISCRIMINATOR_LENGTH + 32) * 2;
 }
 
 pub trait IPlayer {
-    fn check_is_not_banned(&mut self) -> Result<&mut Self>;
+    fn on_creation(&mut self) -> Result<()>;
 }
 
 #[account]
@@ -29,6 +29,22 @@ pub struct PlayerData {
 }
 
 impl PlayerData {
-    pub const LEN: usize = (DISCRIMINATOR_LENGTH + 32 + 8 + 8)
+    pub const LEN: usize = (DISCRIMINATOR_LENGTH + 32 + 8 + 8);
 }
 
+#[account]
+#[derive(Default)]
+pub struct PlayerTenis {
+    /// Owner of this PlayerData account
+    pub owner: Pubkey,
+    /// Is banned?
+    pub banned: bool,
+    /// Activated
+    pub active: bool,
+    /// Tenis rackets
+    pub rackets: u8,
+}
+
+impl PlayerTenis {
+    pub const LEN: usize = (DISCRIMINATOR_LENGTH + 32 + 8 + 8 + 8);
+}

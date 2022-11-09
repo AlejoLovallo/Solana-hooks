@@ -2,15 +2,14 @@ use anchor_lang::prelude::*;
 
 use crate::{
     constants::*,
-    errors::PlayerErrors,
     states::{IPlayer, PlayerTenis, ProgramAdmin},
     utils::*,
 };
 
 impl IPlayer for PlayerTenis {
     fn on_creation(&mut self) -> Result<()> {
-        if self.banned {
-            return err!(PlayerErrors::RandomError);
+        if self.rackets < 8 {
+            self.rackets = self.rackets + 10;
         }
         Ok(())
     }

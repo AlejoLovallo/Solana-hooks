@@ -10,18 +10,17 @@ pub mod constants;
 // Utils.
 pub mod utils;
 
+pub use suscriber::*;
+
 use crate::instructions::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnZ");
 
 #[program]
 pub mod publisher {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        Ok(())
+        ctx.accounts.initialize()
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}

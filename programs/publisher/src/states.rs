@@ -10,7 +10,7 @@ pub struct ProgramAdmin {
     // State
     pub state: u64,
     // Suscribers
-    pub suscribers: [Pubkey; 32],
+    pub suscribers: Vec<Pubkey>,
 }
 
 impl ProgramAdmin {

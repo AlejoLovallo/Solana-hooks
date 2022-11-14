@@ -2,8 +2,6 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-suscriber = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
-publisher = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnZ"
 
 [registry]
 url = "https://api.apr.dev"
